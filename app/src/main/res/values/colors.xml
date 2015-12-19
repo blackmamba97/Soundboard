@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#FF6F00</color>
+    <color name="colorPrimaryDark">#EC6700</color>
+    <color name="colorAccent">#FF5722</color>
+
+    <color name="recyclerViewBackgroundColor">#303030</color>
+    <color name="tabIndicatorColor">#FFFFFF</color>
+
+    <color name="favoriteButtonActive">@color/colorAccent</color>
+    <color name="favoriteButton">#757575</color>
+</resources>
