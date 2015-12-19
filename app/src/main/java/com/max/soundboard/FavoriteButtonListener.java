@@ -13,7 +13,8 @@ class FavoriteButtonListener implements View.OnClickListener {
     private final RecyclerViewAdapter mRecyclerViewAdapter;
     private final RecyclerView mRecyclerView;
 
-    public FavoriteButtonListener(Sound sound, RecyclerViewAdapter adapter, RecyclerView recyclerView) {
+    public FavoriteButtonListener(Sound sound, RecyclerViewAdapter adapter,
+                                  RecyclerView recyclerView) {
         mSound = sound;
         mRecyclerViewAdapter = adapter;
         mRecyclerView = recyclerView;
@@ -28,12 +29,14 @@ class FavoriteButtonListener implements View.OnClickListener {
         // Decide if we must add or remove the sound name from the favorites
         if (favorites.contains(mSound)) {
             // Remove sound from the favorites
-            imageButton.setImageDrawable(ResourcesCompat.getDrawable(v.getContext(), R.drawable.ic_star_outline));
+            imageButton.setImageDrawable(ResourcesCompat.getDrawable(v.getContext(),
+                    R.drawable.ic_star_outline));
             mRecyclerViewAdapter.removeSound(mSound);
             message = String.format(v.getContext().getString(R.string.sound_removed), mSound.getName());
         } else {
             // Add sound to favorites
-            imageButton.setImageDrawable(ResourcesCompat.getDrawable(v.getContext(), R.drawable.ic_star));
+            imageButton.setImageDrawable(ResourcesCompat.getDrawable(v.getContext(),
+                    R.drawable.ic_star));
             favorites.addSound(mSound);
             message = String.format(v.getContext().getString(R.string.sound_added), mSound.getName());
         }

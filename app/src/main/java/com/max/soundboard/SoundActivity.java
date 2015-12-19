@@ -16,9 +16,10 @@ import java.util.ArrayList;
 
 
 public class SoundActivity extends AppCompatActivity {
+    private static final String PERMISSION = Manifest.permission.WRITE_EXTERNAL_STORAGE;
     private static final int PERMISSION_REQUEST_CODE = 1;
     private ViewPager mViewPager;
-    ViewPagerAdapter mViewPagerAdapter;
+    private ViewPagerAdapter mViewPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +35,8 @@ public class SoundActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull final String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull final String[] permissions,
+                                           @NonNull int[] grantResults) {
         if (requestCode == PERMISSION_REQUEST_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permissions granted
@@ -50,27 +52,38 @@ public class SoundActivity extends AppCompatActivity {
 
     private void checkPermissionAndSetupTabs() {
         // Ask for permission to access the groups on the internal storage
-        int permissionsGranted = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int permissionsGranted = ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if (permissionsGranted != PackageManager.PERMISSION_GRANTED) {
             // Permissions need to be granted, so we ask the user
-            final String[] perm = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                new AlertDialog.Builder(this, R.style.AppTheme_AlertDialog)
-                        .setTitle(getString(R.string.storage_access_dialog_title))
-                        .setMessage(getString(R.string.storage_access_dialog_message))
-                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                ActivityCompat.requestPermissions(SoundActivity.this, perm, PERMISSION_REQUEST_CODE);
-                            }
-                        }).show();
-            } else {
-                ActivityCompat.requestPermissions(this, perm, PERMISSION_REQUEST_CODE);
-            }
+            requestPermission();
         } else {
             // Permissions are already granted
             setupTabs();
         }
+    }
+
+    private void requestPermission() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            showRequestPermissionDialog();
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{PERMISSION},
+                    PERMISSION_REQUEST_CODE);
+        }
+    }
+
+    private void showRequestPermissionDialog() {
+        new AlertDialog.Builder(this, R.style.AppTheme_AlertDialog)
+                .setTitle(getString(R.string.storage_access_dialog_title))
+                .setMessage(getString(R.string.storage_access_dialog_message))
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ActivityCompat.requestPermissions(SoundActivity.this,
+                                new String[]{PERMISSION}, PERMISSION_REQUEST_CODE);
+                    }
+                }).show();
     }
 
     private void setupTabs() {
@@ -92,26 +105,35 @@ public class SoundActivity extends AppCompatActivity {
         SoundManager soundManager = SoundManager.getInstance(getApplicationContext());
         ArrayList<SoundGroup> soundGroups = soundManager.getGroups();
         boolean areSoundsPresent = false;
-        if (!soundGroups.isEmpty()) {
-            for (SoundGroup soundGroup : soundGroups) {
-                if (!FileManager.getSoundFileNames(soundGroup.getDirectory()).isEmpty()) {
-                    addTab(soundGroup.getName());
-                    areSoundsPresent = true;
-                }
+
+        if (soundGroups.isEmpty()) {
+            showNoSoundsFoundDialog();
+            return;
+        }
+        for (SoundGroup soundGroup : soundGroups) {
+            String directory = soundGroup.getDirectory();
+            ArrayList<String> soundFileNames = FileManager.getSoundFileNames(directory);
+
+            if (!soundFileNames.isEmpty()) {
+                addTab(soundGroup.getName());
+                areSoundsPresent = true;
             }
         }
-        if (!areSoundsPresent) {
-            // Close the app if no sounds are found
-            new AlertDialog.Builder(this, R.style.AppTheme_AlertDialog)
-                    .setTitle(getString(R.string.no_sounds_found_dialog_title))
-                    .setMessage(getString(R.string.no_sounds_found_dialog_message))
-                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            finish();
-                        }
-                    }).show();
-        }
+        if (!areSoundsPresent)
+            showNoSoundsFoundDialog();
+    }
+
+    private void showNoSoundsFoundDialog() {
+        // Close the app if no sounds are found
+        new AlertDialog.Builder(this, R.style.AppTheme_AlertDialog)
+                .setTitle(getString(R.string.no_sounds_found_dialog_title))
+                .setMessage(getString(R.string.no_sounds_found_dialog_message))
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                }).show();
     }
 
     private void addTab(String groupName) {

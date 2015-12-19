@@ -16,36 +16,39 @@ public class RecyclerViewFragment extends Fragment {
     private RecyclerViewAdapter mRecyclerViewAdapter;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.recycler_view_fragment, container, false);
-        RecyclerView recyclerView = (RecyclerView) view;
+        setupRecyclerView((RecyclerView) view);
+        return view;
+    }
 
-        // Use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
-        recyclerView.setHasFixedSize(true);
+    private void setupRecyclerView(RecyclerView view) {
+        view.setHasFixedSize(true);
+        view.setLayoutManager(new GridLayoutManager(getActivity(), 1));
+        view.setItemAnimator(new FadeInAnimator());
+        // Create a adapter which holds the group
+        setupRecyclerViewAdapter(view);
+        view.setAdapter(mRecyclerViewAdapter);
+    }
 
-        // Set the layout manager
-        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 1));
+    private void setupRecyclerViewAdapter(RecyclerView view) {
+        mRecyclerViewAdapter = new RecyclerViewAdapter(getGroup(), view);
+        mRecyclerViewAdapter.updateSounds();
+    }
 
-        // Add an item animator
-        recyclerView.setItemAnimator(new FadeInAnimator());
-
+    private Group getGroup() {
         // Get the group name from the arguments of this fragment
         String groupName = getArguments().getString(GROUP_NAME);
 
         // Get the group from the SoundManager
         Group group;
         if (groupName != null && groupName.equals(Favorites.NAME)) {
-             group = SoundManager.getInstance(getContext()).getFavorites();
+            group = SoundManager.getInstance(getContext()).getFavorites();
         } else {
             group = SoundManager.getInstance(getContext()).getSoundGroupByName(groupName);
         }
-        // Create a adapter which holds the group
-        mRecyclerViewAdapter = new RecyclerViewAdapter(group, recyclerView);
-        mRecyclerViewAdapter.updateSounds();
-        recyclerView.setAdapter(mRecyclerViewAdapter);
-
-        return view;
+        return group;
     }
 
     public RecyclerViewAdapter getAdapter() {

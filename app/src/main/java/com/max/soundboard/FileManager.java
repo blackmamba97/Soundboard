@@ -18,8 +18,12 @@ class FileManager {
     public static ArrayList<String> getSoundFileNames(String path) {
         ArrayList<String> soundFiles = new ArrayList<>();
         for (File file : new File(path).listFiles())
-            if (file.isFile() && (file.getName().endsWith(".mp3") ||file.getName().endsWith(".wav")))
+            if (file.isFile() && isSoundFileName(file.getName()))
                 soundFiles.add(file.getName());
         return soundFiles;
+    }
+
+    private static boolean isSoundFileName(String filename) {
+        return filename.endsWith(".mp3") || filename.endsWith(".wav");
     }
 }
