@@ -26,10 +26,9 @@ android {
     }
 }
 
-def Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
 def Properties props = new Properties()
-def propFile = file(properties.getProperty('keystore.dir'))
+props.load(project.rootProject.file('local.properties').newDataInputStream())
+def propFile = file(props.getProperty('keystore.dir'))
 if (propFile.canRead()) {
     props.load(new FileInputStream(propFile))
     if (props != null &&
