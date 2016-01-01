@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 
 public class SoundActivity extends AppCompatActivity {
-    private static final String PERMISSION = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+    private static final String EXTERNAL_STORAGE_PERM = Manifest.permission.WRITE_EXTERNAL_STORAGE;
     private static final int PERMISSION_REQUEST_CODE = 1;
     private ViewPager mViewPager;
     private ViewPagerAdapter mViewPagerAdapter;
@@ -52,8 +52,7 @@ public class SoundActivity extends AppCompatActivity {
 
     private void checkPermissionAndSetupTabs() {
         // Ask for permission to access the groups on the internal storage
-        int permissionsGranted = ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int permissionsGranted = ActivityCompat.checkSelfPermission(this, EXTERNAL_STORAGE_PERM);
         if (permissionsGranted != PackageManager.PERMISSION_GRANTED) {
             // Permissions need to be granted, so we ask the user
             requestPermission();
@@ -64,11 +63,10 @@ public class SoundActivity extends AppCompatActivity {
     }
 
     private void requestPermission() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, EXTERNAL_STORAGE_PERM)) {
             showRequestPermissionDialog();
         } else {
-            ActivityCompat.requestPermissions(this, new String[]{PERMISSION},
+            ActivityCompat.requestPermissions(this, new String[]{EXTERNAL_STORAGE_PERM},
                     PERMISSION_REQUEST_CODE);
         }
     }
@@ -81,7 +79,7 @@ public class SoundActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         ActivityCompat.requestPermissions(SoundActivity.this,
-                                new String[]{PERMISSION}, PERMISSION_REQUEST_CODE);
+                                new String[]{EXTERNAL_STORAGE_PERM}, PERMISSION_REQUEST_CODE);
                     }
                 }).show();
     }
