@@ -145,7 +145,8 @@ public class SoundActivity extends AppCompatActivity {
             // If the favorites tab is selected we update the list of favorites in the adapter
             if (tab.getPosition() != 0)
                 return;
-            SoundManager.getFavorites().update();
+            if (!SoundManager.getFavorites().updateIfRequired())
+                return;
             ViewPagerAdapter pagerAdapter = (ViewPagerAdapter) mViewPager.getAdapter();
             RecyclerViewFragment fragment = (RecyclerViewFragment) pagerAdapter.getItem(tabIndex);
             fragment.getAdapter().notifyDataSetChanged();

@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import java.util.HashSet;
+import java.util.Set;
 
 
 class Favorites extends Group {
@@ -12,17 +13,25 @@ class Favorites extends Group {
 
     public Favorites(Context context) {
         super(NAME, context);
-        update();
+        addAllValidSounds(getFavoritesFromSharedPreferences());
     }
 
-    public void update() {
+    public boolean updateIfRequired() {
+        HashSet<String> newFavorites = new HashSet<>();
+        HashSet<String> favorites = new HashSet<>();
+
+        newFavorites.addAll(getFavoritesFromSharedPreferences());
+        for (Sound sound : mSounds)
+            favorites.add(sound.getName());
+
+        // Check if favorites have changed
+        if (favorites.equals(newFavorites))
+            return false;
+
+        // Update favorites
         mSounds.clear();
-        SharedPreferences sharedPreferences = mContext.getSharedPreferences(NAME, 0);
-        for (String soundName : sharedPreferences.getStringSet(NAME, new HashSet<String>())) {
-            Sound sound = SoundManager.getSoundByName(soundName);
-            if (sound != null)
-                mSounds.add(sound);
-        }
+        addAllValidSounds(newFavorites);
+        return true;
     }
 
     @Override
@@ -52,6 +61,19 @@ class Favorites extends Group {
         }
         mSounds.add(sound);
         updateSharedPreferences();
+    }
+
+    private Set<String> getFavoritesFromSharedPreferences() {
+        SharedPreferences sharedPreferences = mContext.getSharedPreferences(NAME, 0);
+        return sharedPreferences.getStringSet(NAME, new HashSet<String>());
+    }
+
+    private void addAllValidSounds(Set<String> set) {
+        for (String soundName : set) {
+            Sound sound = SoundManager.getSoundByName(soundName);
+            if (sound != null)
+                mSounds.add(sound);
+        }
     }
 
     private void updateSharedPreferences() {
