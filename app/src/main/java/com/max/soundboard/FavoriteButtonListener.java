@@ -23,7 +23,7 @@ class FavoriteButtonListener implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         final ImageButton imageButton = (ImageButton) v;
-        final Favorites favorites = SoundManager.getInstance(v.getContext()).getFavorites();
+        final Favorites favorites = SoundManager.getFavorites();
         final String message;
 
         // Decide if we must add or remove the sound name from the favorites
@@ -31,13 +31,13 @@ class FavoriteButtonListener implements View.OnClickListener {
             // Remove sound from the favorites
             imageButton.setImageDrawable(ResourcesCompat.getDrawable(v.getContext(),
                     R.drawable.ic_star_outline));
-            mRecyclerViewAdapter.removeSound(mSound);
+            mRecyclerViewAdapter.removeSoundFromFavorites(mSound);
             message = String.format(v.getContext().getString(R.string.sound_removed), mSound.getName());
         } else {
             // Add sound to favorites
             imageButton.setImageDrawable(ResourcesCompat.getDrawable(v.getContext(),
                     R.drawable.ic_star));
-            favorites.addSound(mSound);
+            favorites.addSoundToFavorites(mSound);
             message = String.format(v.getContext().getString(R.string.sound_added), mSound.getName());
         }
         // Notify the user that the action has finished

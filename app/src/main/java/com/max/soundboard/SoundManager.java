@@ -10,65 +10,53 @@ import java.util.ArrayList;
 
 class SoundManager {
     public static final String SOUND_DIRECTORY = Environment.getExternalStorageDirectory() + "/Soundboard";
-    private static SoundManager instance;
-    private final ArrayList<SoundGroup> mSoundGroups = new ArrayList<>();
-    private final Favorites mFavorites;
-    private final String TAG = this.getClass().getSimpleName();
-    private final Context mContext;
+    private static final ArrayList<SoundGroup> mSoundGroups = new ArrayList<>();
+    private static final String TAG = "Soundmanager";
+    private static Favorites mFavorites;
 
-    private SoundManager(Context context) {
-        mContext = context;
-        mFavorites = new Favorites(context);
-        new File(SOUND_DIRECTORY).mkdir();
-        updateGroups();
-    }
-
-    public static SoundManager getInstance(Context context) {
-        if (instance == null) {
-            instance = new SoundManager(context);
+    public static Favorites setupFavorites(Context context) {
+        // If the sound directory does not exist we create it
+        if (!new File(SOUND_DIRECTORY).mkdir()) {
+            // Setup sound group list
+            for (String groupName : FileManager.getSubdirectories(SOUND_DIRECTORY)) {
+                SoundGroup soundGroup = new SoundGroup(groupName, context);
+                if (soundGroup.getSize() > 0)
+                    mSoundGroups.add(soundGroup);
+            }
         }
-        return instance;
+        return mFavorites = new Favorites(context);
     }
 
-    public SoundGroup getSoundGroupByName(String groupName) {
-        for (SoundGroup soundGroup : mSoundGroups) {
+    public static SoundGroup getSoundGroupByName(String groupName) {
+        for (SoundGroup soundGroup : mSoundGroups)
             if (soundGroup.getName().equals(groupName))
                 return soundGroup;
-        }
         Log.e(TAG, "Sound group for \"" + groupName + "\" does not exist!");
         return null;
     }
 
-    public String getGroupNameBySound(Sound sound) {
-        for (SoundGroup soundGroup : mSoundGroups) {
+    public static String getGroupNameBySound(Sound sound) {
+        for (SoundGroup soundGroup : mSoundGroups)
             if (soundGroup.contains(sound))
                 return soundGroup.getName();
-        }
         Log.e(TAG, "Sound group for \"" + sound.getName() + "\" does not exist!");
         return null;
     }
 
-    public File getSoundPath(String soundName) {
-        for (SoundGroup soundGroup : mSoundGroups) {
-            String path = SOUND_DIRECTORY + "/" + soundGroup.getName();
-            if (FileManager.getSoundFileNames(path).contains(soundName))
-                return new File(path + "/" + soundName);
-        }
-        Log.e(TAG, "Soundpath for \"" + soundName + "\" does not exist!");
+    public static Sound getSoundByName(String name) {
+        for (SoundGroup soundGroup : mSoundGroups)
+            for (Sound sound : soundGroup)
+                if (sound.getName().equals(name))
+                    return sound;
+        Log.e(TAG, "Sound \"" + name + "\" does not exist!");
         return null;
     }
 
-    public ArrayList<SoundGroup> getGroups() {
+    public static ArrayList<SoundGroup> getGroups() {
         return mSoundGroups;
     }
 
-    private void updateGroups() {
-        mSoundGroups.clear();
-        for (String groupName : FileManager.getSubdirectories(SOUND_DIRECTORY))
-            mSoundGroups.add(new SoundGroup(groupName, mContext));
-    }
-
-    public Favorites getFavorites() {
+    public static Favorites getFavorites() {
         return mFavorites;
     }
 }

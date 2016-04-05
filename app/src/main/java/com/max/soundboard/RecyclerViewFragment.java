@@ -28,13 +28,8 @@ public class RecyclerViewFragment extends Fragment {
         view.setLayoutManager(new GridLayoutManager(getActivity(), 1));
         view.setItemAnimator(new FadeInAnimator());
         // Create a adapter which holds the group
-        setupRecyclerViewAdapter(view);
-        view.setAdapter(mRecyclerViewAdapter);
-    }
-
-    private void setupRecyclerViewAdapter(RecyclerView view) {
         mRecyclerViewAdapter = new RecyclerViewAdapter(getGroup(), view);
-        mRecyclerViewAdapter.updateSounds();
+        view.setAdapter(mRecyclerViewAdapter);
     }
 
     private Group getGroup() {
@@ -42,13 +37,11 @@ public class RecyclerViewFragment extends Fragment {
         String groupName = getArguments().getString(GROUP_NAME);
 
         // Get the group from the SoundManager
-        Group group;
         if (groupName != null && groupName.equals(Favorites.NAME)) {
-            group = SoundManager.getInstance(getContext()).getFavorites();
+            return SoundManager.getFavorites();
         } else {
-            group = SoundManager.getInstance(getContext()).getSoundGroupByName(groupName);
+            return SoundManager.getSoundGroupByName(groupName);
         }
-        return group;
     }
 
     public RecyclerViewAdapter getAdapter() {

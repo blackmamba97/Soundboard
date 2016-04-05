@@ -12,8 +12,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-import java.util.ArrayList;
-
 
 public class SoundActivity extends AppCompatActivity {
     private static final String EXTERNAL_STORAGE_PERM = Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -29,6 +27,8 @@ public class SoundActivity extends AppCompatActivity {
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+
+        SoundManager.setupFavorites(this);
 
         // Add tabs to the tab layout
         checkPermissionAndSetupTabs();
@@ -99,26 +99,14 @@ public class SoundActivity extends AppCompatActivity {
     }
 
     private void addSoundGroupTabs() {
-        // Create a new tab for each group
-        SoundManager soundManager = SoundManager.getInstance(getApplicationContext());
-        ArrayList<SoundGroup> soundGroups = soundManager.getGroups();
-        boolean areSoundsPresent = false;
-
-        if (soundGroups.isEmpty()) {
+        if (SoundManager.getGroups().isEmpty()) {
             showNoSoundsFoundDialog();
             return;
         }
-        for (SoundGroup soundGroup : soundGroups) {
-            String directory = soundGroup.getDirectory();
-            ArrayList<String> soundFileNames = FileManager.getSoundFileNames(directory);
-
-            if (!soundFileNames.isEmpty()) {
-                addTab(soundGroup.getName());
-                areSoundsPresent = true;
-            }
+        // Create a new tab for each group
+        for (SoundGroup soundGroup : SoundManager.getGroups()) {
+            addTab(soundGroup.getName());
         }
-        if (!areSoundsPresent)
-            showNoSoundsFoundDialog();
     }
 
     private void showNoSoundsFoundDialog() {
@@ -154,11 +142,12 @@ public class SoundActivity extends AppCompatActivity {
             mViewPager.setCurrentItem(tabIndex);
 
             // If the favorites tab is selected we update the list of favorites in the adapter
-            if (tab.getPosition() == 0) {
-                ViewPagerAdapter pagerAdapter = (ViewPagerAdapter) mViewPager.getAdapter();
-                RecyclerViewFragment fragment = (RecyclerViewFragment) pagerAdapter.getItem(tabIndex);
-                fragment.getAdapter().updateSounds();
-            }
+            if (tab.getPosition() != 0)
+                return;
+            SoundManager.getFavorites().update();
+            ViewPagerAdapter pagerAdapter = (ViewPagerAdapter) mViewPager.getAdapter();
+            RecyclerViewFragment fragment = (RecyclerViewFragment) pagerAdapter.getItem(tabIndex);
+            fragment.getAdapter().notifyDataSetChanged();
         }
 
         @Override

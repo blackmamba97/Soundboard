@@ -43,7 +43,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        final Sound sound = mSoundGroup.getSounds().get(position);
+        final Sound sound = mSoundGroup.getSound(position);
         final String soundName = sound.getName();
 
         // PlayPauseView must match the current state of the sound
@@ -61,11 +61,11 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
 
     private void updatePlayPauseView(ViewHolder holder, int position) {
         if ((holder.mPlayPauseView.getState() == MorphButton.MorphState.END)
-                && !mSoundGroup.getSounds().get(position).isPlaying()) {
+                && !mSoundGroup.getSound(position).isPlaying()) {
             holder.mPlayPauseView.setState(MorphButton.MorphState.START, false);
         }
         if ((holder.mPlayPauseView.getState() == MorphButton.MorphState.START)
-                && mSoundGroup.getSounds().get(position).isPlaying()) {
+                && mSoundGroup.getSound(position).isPlaying()) {
             holder.mPlayPauseView.setState(MorphButton.MorphState.END, false);
         }
     }
@@ -74,8 +74,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
         holder.mSoundNameTextView.setText(soundName.substring(0, soundName.length() - 4));
         if (mSoundGroup.getName().equals(Favorites.NAME)) {
             // Get the group name of the sounds in the favorites
-            String groupName = SoundManager.getInstance(mContext).getGroupNameBySound(sound);
-            holder.mGroupNameTextView.setText(groupName);
+            holder.mGroupNameTextView.setText(SoundManager.getGroupNameBySound(sound));
 
             // Add bottom padding so the group name has its own space
             final float scale = mContext.getResources().getDisplayMetrics().density;
@@ -91,7 +90,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
         holder.mFavoringButton.setOnClickListener(new FavoriteButtonListener(sound, this,
                 mRecyclerView));
         holder.mFavoringButton.setContentDescription(soundName);
-        if (SoundManager.getInstance(mContext).getFavorites().contains(sound)) {
+        if (SoundManager.getFavorites().contains(sound)) {
             holder.mFavoringButton.setImageDrawable(ResourcesCompat.getDrawable(mContext,
                     R.drawable.ic_star));
         } else {
@@ -102,18 +101,13 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
 
     @Override
     public int getItemCount() {
-        return mSoundGroup.getSounds().size();
+        return mSoundGroup.getSize();
     }
 
-    public void removeSound(Sound sound) {
-        int index = mSoundGroup.removeSound(sound);
+    public void removeSoundFromFavorites(Sound sound) {
+        int index = mSoundGroup.removeSoundFromFavorites(sound);
         if (index >= 0)
             notifyItemRemoved(index);
-    }
-
-    public void updateSounds() {
-        mSoundGroup.updateSounds();
-        notifyDataSetChanged();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
