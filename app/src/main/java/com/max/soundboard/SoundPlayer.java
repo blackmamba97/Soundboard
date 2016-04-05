@@ -20,6 +20,9 @@ class SoundPlayer {
     }
 
     public static void playSound(Context context, Sound sound, MorphButton playPauseView) {
+        // Check if sound exists
+        if (!sound.getDirectory().exists())
+            return;
         // Reset the soundplayer
         reset();
         // Remeber the sound to reset it if another sound is played
