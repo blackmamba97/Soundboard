@@ -42,6 +42,4 @@ abstract class Group implements Iterable<Sound> {
     public Iterator<Sound> iterator() {
         return mSounds.iterator();
     }
-
-    public abstract int removeSoundFromFavorites(Sound sound);
 }

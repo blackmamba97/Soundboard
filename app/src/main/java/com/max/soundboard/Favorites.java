@@ -10,57 +10,44 @@ import java.util.Set;
 
 class Favorites extends Group {
     public static final String NAME = "Favorites";
+    private static RecyclerViewAdapter mFavoritesAdapter;
 
     public Favorites(Context context) {
         super(NAME, context);
         addAllValidSounds(getFavoritesFromSharedPreferences());
     }
 
-    public boolean updateIfRequired() {
-        HashSet<String> newFavorites = new HashSet<>();
-        HashSet<String> favorites = new HashSet<>();
-
-        newFavorites.addAll(getFavoritesFromSharedPreferences());
-        for (Sound sound : mSounds)
-            favorites.add(sound.getName());
-
-        // Check if favorites have changed
-        if (favorites.equals(newFavorites))
-            return false;
-
-        // Update favorites
-        mSounds.clear();
-        addAllValidSounds(newFavorites);
-        return true;
-    }
-
-    @Override
-    public int removeSoundFromFavorites(Sound sound) {
+    public void remove(Sound sound, boolean favoritesTab) {
         if (!contains(sound)) {
             Log.e(NAME, "Sound is not in the list of favorites!");
-            return -1;
+            return;
         }
         int index = mSounds.indexOf(sound);
         mSounds.remove(index);
         updateSharedPreferences();
 
-        // Update the tab which contains the original sound
-        String groupName = sound.getGroup().getName();
-        ViewPagerAdapter adapter = ((SoundActivity) mContext).getViewPagerAdapter();
-        RecyclerViewFragment fragment = (RecyclerViewFragment) adapter.getFragment(groupName);
-        fragment.getAdapter().updateItem(sound);
+        // Notify the favorites recyclerview adapter
+        getFavoritesAdapter().notifyItemRemoved(index);
 
-        // Return the index of the sound to remove it from the favorites recyclerview
-        return index;
+        // Update the tab which contains the original sound if we are in favorites tab
+        if (favoritesTab) {
+            String groupName = sound.getGroup().getName();
+            ViewPagerAdapter adapter = ((SoundActivity) mContext).getViewPagerAdapter();
+            RecyclerViewFragment origFragment = (RecyclerViewFragment) adapter.getFragment(groupName);
+            origFragment.getAdapter().updateItem(sound);
+        }
     }
 
-    public void addSoundToFavorites(Sound sound) {
+    public void add(Sound sound) {
         if (contains(sound)) {
             Log.e(NAME, "Sound is already in the list of favorites!");
             return;
         }
         mSounds.add(sound);
         updateSharedPreferences();
+
+        // Notify the favorites recyclerview adapter
+        getFavoritesAdapter().notifyItemInserted(mSounds.size() - 1);
     }
 
     private Set<String> getFavoritesFromSharedPreferences() {
@@ -74,6 +61,15 @@ class Favorites extends Group {
             if (sound != null)
                 mSounds.add(sound);
         }
+    }
+
+    private RecyclerViewAdapter getFavoritesAdapter() {
+        if (mFavoritesAdapter == null) {
+            ViewPagerAdapter adapter = ((SoundActivity) mContext).getViewPagerAdapter();
+            RecyclerViewFragment favFragment = (RecyclerViewFragment) adapter.getFragment(NAME);
+            mFavoritesAdapter = favFragment.getAdapter();
+        }
+        return mFavoritesAdapter;
     }
 
     private void updateSharedPreferences() {

@@ -18,11 +18,13 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
     private final Context mContext;
     private final Group mSoundGroup;
     private final RecyclerView mRecyclerView;
+    private final boolean mIsFavoritesAdapter;
 
     public RecyclerViewAdapter(Group soundGroup, RecyclerView recyclerView) {
         mContext = recyclerView.getContext();
         mSoundGroup = soundGroup;
         mRecyclerView = recyclerView;
+        mIsFavoritesAdapter = mSoundGroup.getName().equals(Favorites.NAME);
     }
 
     @Override
@@ -72,7 +74,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
 
     private void updateSoundNameTextView(ViewHolder holder, Sound sound, String soundName) {
         holder.mSoundNameTextView.setText(soundName.substring(0, soundName.length() - 4));
-        if (mSoundGroup.getName().equals(Favorites.NAME)) {
+        if (mIsFavoritesAdapter) {
             // Get the group name of the sounds in the favorites
             holder.mGroupNameTextView.setText(SoundManager.getGroupNameBySound(sound));
 
@@ -87,8 +89,8 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
     }
 
     private void updateFavoriteButton(ViewHolder holder, Sound sound, String soundName) {
-        holder.mFavoringButton.setOnClickListener(new FavoriteButtonListener(sound, this,
-                mRecyclerView));
+        holder.mFavoringButton.setOnClickListener(new FavoriteButtonListener(sound, mRecyclerView,
+                mIsFavoritesAdapter));
         holder.mFavoringButton.setContentDescription(soundName);
         if (SoundManager.getFavorites().contains(sound)) {
             holder.mFavoringButton.setImageDrawable(ResourcesCompat.getDrawable(mContext,
@@ -106,12 +108,6 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
 
     public void updateItem(Sound sound) {
         notifyItemChanged(mSoundGroup.indexOf(sound));
-    }
-
-    public void removeSoundFromFavorites(Sound sound) {
-        int index = mSoundGroup.removeSoundFromFavorites(sound);
-        if (index >= 0)
-            notifyItemRemoved(index);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

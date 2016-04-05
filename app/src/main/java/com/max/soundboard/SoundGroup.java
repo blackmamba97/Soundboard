@@ -14,10 +14,4 @@ class SoundGroup extends Group {
             mSounds.add(new Sound(soundName, soundDir, this));
         }
     }
-
-    @Override
-    public int removeSoundFromFavorites(Sound sound) {
-        SoundManager.getFavorites().removeSoundFromFavorites(sound);
-        return -1;
-    }
 }

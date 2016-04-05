@@ -10,14 +10,13 @@ import com.wnafee.vector.compat.ResourcesCompat;
 
 class FavoriteButtonListener implements View.OnClickListener {
     private final Sound mSound;
-    private final RecyclerViewAdapter mRecyclerViewAdapter;
     private final RecyclerView mRecyclerView;
+    private final boolean mFavoritesTab;
 
-    public FavoriteButtonListener(Sound sound, RecyclerViewAdapter adapter,
-                                  RecyclerView recyclerView) {
+    public FavoriteButtonListener(Sound sound, RecyclerView recyclerView, boolean favoritesTab) {
         mSound = sound;
-        mRecyclerViewAdapter = adapter;
         mRecyclerView = recyclerView;
+        mFavoritesTab = favoritesTab;
     }
 
     @Override
@@ -31,13 +30,13 @@ class FavoriteButtonListener implements View.OnClickListener {
             // Remove sound from the favorites
             imageButton.setImageDrawable(ResourcesCompat.getDrawable(v.getContext(),
                     R.drawable.ic_star_outline));
-            mRecyclerViewAdapter.removeSoundFromFavorites(mSound);
+            favorites.remove(mSound, mFavoritesTab);
             message = String.format(v.getContext().getString(R.string.sound_removed), mSound.getName());
         } else {
             // Add sound to favorites
             imageButton.setImageDrawable(ResourcesCompat.getDrawable(v.getContext(),
                     R.drawable.ic_star));
-            favorites.addSoundToFavorites(mSound);
+            favorites.add(mSound);
             message = String.format(v.getContext().getString(R.string.sound_added), mSound.getName());
         }
         // Notify the user that the action has finished
