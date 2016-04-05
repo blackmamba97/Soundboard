@@ -2,12 +2,12 @@
 <resources>
     <string name="app_name">Soundboard</string>
 
-    <string name="favorites">Favoriten</string>
+    <string name="favorites">Favorites</string>
 
-    <string name="play">Abspielen</string>
+    <string name="play">Play</string>
 
-    <string name="sound_added">\"%1$s\" wurde den Favoriten hinzugefügt</string>
-    <string name="sound_removed">\"%1$s\" wurde von den Favoriten entfernt</string>
+    <string name="sound_added">\"%1$s\" was added to favorites</string>
+    <string name="sound_removed">\"%1$s\" was removed from favorites</string>
 
     <string name="no_sounds_found_dialog_title">No sounds found</string>
     <string name="no_sounds_found_dialog_message">You need to create folders containing .mp3 or .wav sound files in the \"Soundboard\" directory on your internal storage</string>
