@@ -104,6 +104,10 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
         return mSoundGroup.getSize();
     }
 
+    public void updateItem(Sound sound) {
+        notifyItemChanged(mSoundGroup.indexOf(sound));
+    }
+
     public void removeSoundFromFavorites(Sound sound) {
         int index = mSoundGroup.removeSoundFromFavorites(sound);
         if (index >= 0)

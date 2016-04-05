@@ -31,6 +31,13 @@ class Favorites extends Group {
         int index = mSounds.indexOf(sound);
         mSounds.remove(index);
         updateSharedPreferences();
+
+        // Update the tab which contains the original sound
+        String groupName = sound.getGroup().getName();
+        ViewPagerAdapter adapter = ((SoundActivity) mContext).getViewPagerAdapter();
+        RecyclerViewFragment fragment = (RecyclerViewFragment) adapter.getFragment(groupName);
+        fragment.getAdapter().updateItem(sound);
+
         // Return the index of the sound to remove it from the favorites recyclerview
         return index;
     }

@@ -29,8 +29,6 @@ public class SoundActivity extends AppCompatActivity {
         mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         SoundManager.setupFavorites(this);
-
-        // Add tabs to the tab layout
         checkPermissionAndSetupTabs();
     }
 
@@ -48,6 +46,10 @@ public class SoundActivity extends AppCompatActivity {
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
+    }
+
+    public ViewPagerAdapter getViewPagerAdapter() {
+        return mViewPagerAdapter;
     }
 
     private void checkPermissionAndSetupTabs() {
@@ -104,9 +106,8 @@ public class SoundActivity extends AppCompatActivity {
             return;
         }
         // Create a new tab for each group
-        for (SoundGroup soundGroup : SoundManager.getGroups()) {
+        for (SoundGroup soundGroup : SoundManager.getGroups())
             addTab(soundGroup.getName());
-        }
     }
 
     private void showNoSoundsFoundDialog() {
@@ -153,9 +154,8 @@ public class SoundActivity extends AppCompatActivity {
         @Override
         public void onTabUnselected(TabLayout.Tab tab) {
             // Stop mediaplayer when an sound is playing and tabs are switched
-            if (SoundPlayer.getMediaPlayer() != null) {
+            if (SoundPlayer.getMediaPlayer() != null)
                 SoundPlayer.reset();
-            }
         }
 
         @Override

@@ -24,6 +24,10 @@ abstract class Group implements Iterable<Sound> {
         return mSounds.get(position);
     }
 
+    public int indexOf(Sound sound) {
+        return mSounds.indexOf(sound);
+    }
+
     public int getSize() {
         return mSounds.size();
     }
