@@ -18,6 +18,7 @@ class SoundManager {
         // If the sound directory does not exist we create it
         if (!new File(SOUND_DIRECTORY).mkdir()) {
             // Setup sound group list
+            mSoundGroups.clear();
             for (String groupName : FileManager.getSubdirectories(SOUND_DIRECTORY)) {
                 SoundGroup soundGroup = new SoundGroup(groupName, context);
                 if (soundGroup.getSize() > 0)

@@ -39,4 +39,9 @@ class ViewPagerAdapter extends FragmentPagerAdapter {
     public Fragment getFragment(String title) {
         return mFragmentList.get(mFragmentTitleList.indexOf(title));
     }
+
+    public void removeFragment(int position) {
+        mFragmentList.remove(position);
+        mFragmentTitleList.remove(position);
+    }
 }

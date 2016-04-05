@@ -11,6 +11,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 
 
 public class SoundActivity extends AppCompatActivity {
@@ -30,6 +32,31 @@ public class SoundActivity extends AppCompatActivity {
 
         SoundManager.setupFavorites(this);
         checkPermissionAndSetupTabs();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_refresh)
+            refreshTabs();
+        return true;
+    }
+
+    private void refreshTabs() {
+        // Remove all tabs
+        mViewPager.setCurrentItem(0);
+        for (int i = mViewPagerAdapter.getCount() - 1; i > 0; i--)
+            mViewPagerAdapter.removeFragment(i);
+        mViewPager.invalidate();
+        // Add and sound groups to the view pager adapter
+        SoundManager.setupFavorites(this);
+        addSoundGroupTabs();
+        mViewPagerAdapter.notifyDataSetChanged();
     }
 
     @Override

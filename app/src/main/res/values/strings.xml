@@ -6,6 +6,8 @@
 
     <string name="play">Play</string>
 
+    <string name="refresh">Refresh sounds</string>
+
     <string name="sound_added">\"%1$s\" was added to favorites</string>
     <string name="sound_removed">\"%1$s\" was removed from favorites</string>
 
