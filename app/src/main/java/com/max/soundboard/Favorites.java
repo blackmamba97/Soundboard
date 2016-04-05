@@ -34,7 +34,9 @@ class Favorites extends Group {
             String groupName = sound.getGroup().getName();
             ViewPagerAdapter adapter = ((SoundActivity) mContext).getViewPagerAdapter();
             RecyclerViewFragment origFragment = (RecyclerViewFragment) adapter.getFragment(groupName);
-            origFragment.getAdapter().updateItem(sound);
+            RecyclerViewAdapter origAdapter = origFragment.getAdapter();
+            if (origAdapter != null)
+                origAdapter.updateItem(sound);
         }
     }
 
