@@ -18,8 +18,11 @@ class Favorites extends Group {
     public void update() {
         mSounds.clear();
         SharedPreferences sharedPreferences = mContext.getSharedPreferences(NAME, 0);
-        for (String soundName : sharedPreferences.getStringSet(NAME, new HashSet<String>()))
-            mSounds.add(SoundManager.getSoundByName(soundName));
+        for (String soundName : sharedPreferences.getStringSet(NAME, new HashSet<String>())) {
+            Sound sound = SoundManager.getSoundByName(soundName);
+            if (sound != null)
+                mSounds.add(sound);
+        }
     }
 
     @Override
