@@ -55,5 +55,5 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.2.1'
     compile 'com.android.support:support-v4:23.2.1'
     compile 'com.wnafee:vector-compat:1.0.5'
-    compile 'jp.wasabeef:recyclerview-animators:2.1.0'
+    compile 'jp.wasabeef:recyclerview-animators:2.2.2'
 }
