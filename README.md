@@ -6,7 +6,7 @@ The sound files must be structured by folders representing groups of sound.
 
 The groups are displayed as tabs and the sounds as elements of a list view.
 
-You can also favorite single sounds.
+You can also favor single sounds.
 
 ##Example:
 This sounds are in one group:
