@@ -124,7 +124,7 @@ public class SoundActivity extends AppCompatActivity {
         // Setup tab layout
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
-        tabLayout.setOnTabSelectedListener(new OnTabSelectedListener());
+        tabLayout.addOnTabSelectedListener(new OnTabSelectedListener());
     }
 
     private void addSoundGroupTabs() {
