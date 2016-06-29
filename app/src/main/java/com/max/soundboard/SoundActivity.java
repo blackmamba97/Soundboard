@@ -30,7 +30,6 @@ public class SoundActivity extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        SoundManager.setupFavorites(this);
         checkPermissionAndSetupTabs();
     }
 
@@ -54,7 +53,7 @@ public class SoundActivity extends AppCompatActivity {
             mViewPagerAdapter.removeFragment(i);
         mViewPager.invalidate();
         // Add and sound groups to the view pager adapter
-        SoundManager.setupFavorites(this);
+        SoundManager.setupFavoritesAndGroups(this);
         addSoundGroupTabs();
         mViewPagerAdapter.notifyDataSetChanged();
     }
@@ -114,6 +113,9 @@ public class SoundActivity extends AppCompatActivity {
     }
 
     private void setupTabs() {
+        // Scan for folders containing sounds
+        SoundManager.setupFavoritesAndGroups(this);
+
         // Add favorites and sound groups to the view pager adapter
         addTab(Favorites.NAME);
         addSoundGroupTabs();

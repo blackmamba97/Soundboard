@@ -14,7 +14,7 @@ class SoundManager {
     private static final String TAG = "Soundmanager";
     private static Favorites mFavorites;
 
-    public static Favorites setupFavorites(Context context) {
+    public static void setupFavoritesAndGroups(Context context) {
         // If the sound directory does not exist we create it
         if (!new File(SOUND_DIRECTORY).mkdir()) {
             // Setup sound group list
@@ -25,7 +25,7 @@ class SoundManager {
                     mSoundGroups.add(soundGroup);
             }
         }
-        return mFavorites = new Favorites(context);
+        mFavorites = new Favorites(context);
     }
 
     public static SoundGroup getSoundGroupByName(String groupName) {
