@@ -36,14 +36,6 @@ class SoundManager {
         return null;
     }
 
-    public static String getGroupNameBySound(Sound sound) {
-        for (SoundGroup soundGroup : mSoundGroups)
-            if (soundGroup.contains(sound))
-                return soundGroup.getName();
-        Log.e(TAG, "Sound group for \"" + sound.getName() + "\" does not exist!");
-        return null;
-    }
-
     public static Sound getSoundByName(String name) {
         for (SoundGroup soundGroup : mSoundGroups)
             for (Sound sound : soundGroup)

@@ -76,7 +76,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
         holder.mSoundNameTextView.setText(soundName.substring(0, soundName.length() - 4));
         if (mIsFavoritesAdapter) {
             // Get the group name of the sounds in the favorites
-            holder.mGroupNameTextView.setText(SoundManager.getGroupNameBySound(sound));
+            holder.mGroupNameTextView.setText(sound.getGroup().getName());
 
             // Add bottom padding so the group name has its own space
             final float scale = mContext.getResources().getDisplayMetrics().density;
