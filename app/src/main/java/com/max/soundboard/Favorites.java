@@ -17,7 +17,7 @@ class Favorites extends Group {
         addAllValidSounds(getFavoritesFromSharedPreferences());
     }
 
-    public void remove(Sound sound, boolean favoritesTab) {
+    public void remove(Sound sound, boolean isFavoritesTab) {
         if (!contains(sound)) {
             Log.e(NAME, "Sound is not in the list of favorites!");
             return;
@@ -30,7 +30,7 @@ class Favorites extends Group {
         getFavoritesAdapter().notifyItemRemoved(index);
 
         // Update the tab which contains the original sound if we are in favorites tab
-        if (favoritesTab) {
+        if (isFavoritesTab) {
             String groupName = sound.getGroup().getName();
             ViewPagerAdapter adapter = ((SoundActivity) mContext).getViewPagerAdapter();
             RecyclerViewFragment origFragment = (RecyclerViewFragment) adapter.getFragment(groupName);
