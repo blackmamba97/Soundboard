@@ -39,6 +39,7 @@ abstract class Group implements Iterable<Sound> {
         return false;
     }
 
+    @Override
     public Iterator<Sound> iterator() {
         return mSounds.iterator();
     }
