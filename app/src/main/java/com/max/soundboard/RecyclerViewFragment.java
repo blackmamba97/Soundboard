@@ -8,8 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import jp.wasabeef.recyclerview.animators.FadeInAnimator;
-
 
 public class RecyclerViewFragment extends Fragment {
     public static final String GROUP_NAME = "groupName";
@@ -26,7 +24,6 @@ public class RecyclerViewFragment extends Fragment {
     private void setupRecyclerView(RecyclerView view) {
         view.setHasFixedSize(true);
         view.setLayoutManager(new GridLayoutManager(getActivity(), 1));
-        view.setItemAnimator(new FadeInAnimator());
         // Create a adapter which holds the group
         mRecyclerViewAdapter = new RecyclerViewAdapter(getGroup(), view);
         view.setAdapter(mRecyclerViewAdapter);
