@@ -34,4 +34,9 @@ class Sound {
     public void setPlaying(boolean isPlaying) {
         this.isPlaying = isPlaying;
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

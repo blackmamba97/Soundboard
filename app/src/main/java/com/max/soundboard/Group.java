@@ -25,7 +25,12 @@ abstract class Group implements Iterable<Sound> {
     }
 
     public int indexOf(Sound sound) {
-        return mSounds.indexOf(sound);
+        for (int i = 0; i < mSounds.size(); i++) {
+            if (mSounds.get(i).getName().equals(sound.getName())) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     public int getSize() {
@@ -33,14 +38,16 @@ abstract class Group implements Iterable<Sound> {
     }
 
     public boolean contains(Sound sound) {
-        for (Sound s : mSounds)
-            if (s.getName().equals(sound.getName()))
-                return true;
-        return false;
+        return indexOf(sound) >= 0;
     }
 
     @Override
     public Iterator<Sound> iterator() {
         return mSounds.iterator();
+    }
+
+    @Override
+    public String toString() {
+        return mName;
     }
 }

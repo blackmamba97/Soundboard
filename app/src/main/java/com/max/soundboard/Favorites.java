@@ -18,11 +18,11 @@ class Favorites extends Group {
     }
 
     public void remove(Sound sound, boolean isFavoritesTab) {
-        if (!contains(sound)) {
+        int index = indexOf(sound);
+        if (index < 0) {
             Log.e(NAME, "Sound is not in the list of favorites!");
             return;
         }
-        int index = mSounds.indexOf(sound);
         mSounds.remove(index);
         updateSharedPreferences();
 
