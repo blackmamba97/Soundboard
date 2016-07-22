@@ -48,7 +48,7 @@ public class SoundActivity extends AppCompatActivity {
 
     private void refreshTabs() {
         // Remove all tabs
-        mViewPager.setCurrentItem(0);
+        mViewPager.setCurrentItem(0, false);
         for (int i = mViewPagerAdapter.getCount() - 1; i > 0; i--)
             mViewPagerAdapter.removeFragment(i);
         mViewPager.invalidate();
