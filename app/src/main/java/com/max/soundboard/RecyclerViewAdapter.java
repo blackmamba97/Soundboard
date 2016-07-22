@@ -46,34 +46,30 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final Sound sound = mSoundGroup.getSound(position);
-        final String soundName = sound.getName();
 
         // PlayPauseView must match the current state of the sound
-        updatePlayPauseView(holder, position);
+        updatePlayPauseView(holder, sound);
 
         // Sound name and group name text view
-        updateSoundNameTextView(holder, sound, soundName);
+        updateSoundNameTextView(holder, sound);
 
         // Favoring button
-        updateFavoriteButton(holder, sound, soundName);
+        updateFavoriteButton(holder, sound);
 
         // The card view recognizes clicks to play the sound
         holder.mCardView.setOnClickListener(new PlayButtonListener(sound));
     }
 
-    private void updatePlayPauseView(ViewHolder holder, int position) {
-        if ((holder.mPlayPauseView.getState() == MorphButton.MorphState.END)
-                && !mSoundGroup.getSound(position).isPlaying()) {
-            holder.mPlayPauseView.setState(MorphButton.MorphState.START, false);
-        }
-        if ((holder.mPlayPauseView.getState() == MorphButton.MorphState.START)
-                && mSoundGroup.getSound(position).isPlaying()) {
+    private void updatePlayPauseView(ViewHolder holder, Sound sound) {
+        if (holder.mPlayPauseView.getState() == MorphButton.MorphState.START && sound.isPlaying())
             holder.mPlayPauseView.setState(MorphButton.MorphState.END, false);
-        }
+        else
+            holder.mPlayPauseView.setState(MorphButton.MorphState.START, false);
     }
 
-    private void updateSoundNameTextView(ViewHolder holder, Sound sound, String soundName) {
-        holder.mSoundNameTextView.setText(soundName.substring(0, soundName.length() - 4));
+    private void updateSoundNameTextView(ViewHolder holder, Sound sound) {
+        final String soundName = sound.getName().substring(0, sound.getName().length() - 4);
+        holder.mSoundNameTextView.setText(soundName);
         if (mIsFavoritesAdapter) {
             // Get the group name of the sounds in the favorites
             holder.mGroupNameTextView.setText(sound.getGroup().getName());
@@ -88,10 +84,10 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
         }
     }
 
-    private void updateFavoriteButton(ViewHolder holder, Sound sound, String soundName) {
+    private void updateFavoriteButton(ViewHolder holder, Sound sound) {
         holder.mFavoringButton.setOnClickListener(new FavoriteButtonListener(sound, mRecyclerView,
                 mIsFavoritesAdapter));
-        holder.mFavoringButton.setContentDescription(soundName);
+        holder.mFavoringButton.setContentDescription(sound.getName());
         if (SoundManager.getFavorites().contains(sound)) {
             holder.mFavoringButton.setImageDrawable(ResourcesCompat.getDrawable(mContext,
                     R.drawable.ic_star));
