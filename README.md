@@ -23,4 +23,3 @@ And this sound is in another:
 ##Libraries:
 * [Android Support Library](http://developer.android.com/tools/support-library/index.html)
 * [vector-compat](https://github.com/wnafee/vector-compat)
-* [recyclerview-animators](https://github.com/wasabeef/recyclerview-animators)
