@@ -20,6 +20,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
     private final RecyclerView mRecyclerView;
     private final Favorites mFavorites;
     private final boolean mIsFavoritesAdapter;
+    private final int mPadding;
 
     public RecyclerViewAdapter(Group soundGroup, RecyclerView recyclerView,
                                Favorites favorites) {
@@ -28,6 +29,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
         mRecyclerView = recyclerView;
         mFavorites = favorites;
         mIsFavoritesAdapter = mSoundGroup.getName().equals(Favorites.NAME);
+        mPadding = (int) (20 * mContext.getResources().getDisplayMetrics().density + 0.5f);
     }
 
     @Override
@@ -68,6 +70,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
     }
 
     private void updateTextViews(TextView soundText, TextView groupText, Sound sound) {
+        // Remove the file ending from the displayed name
         final String soundName = sound.getName().substring(0, sound.getName().length() - 4);
         soundText.setText(soundName);
         if (mIsFavoritesAdapter) {
@@ -75,8 +78,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
             groupText.setText(sound.getGroup().getName());
 
             // Add bottom padding so the group name has its own space
-            final float scale = mContext.getResources().getDisplayMetrics().density;
-            soundText.setPadding(0, 0, 0, (int) (20 * scale + 0.5f));
+            soundText.setPadding(0, 0, 0, mPadding);
         } else {
             // Remove bottom padding if group name is not present
             groupText.setVisibility(View.GONE);
