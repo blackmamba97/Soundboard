@@ -18,12 +18,15 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
     private final Context mContext;
     private final Group mSoundGroup;
     private final RecyclerView mRecyclerView;
+    private final Favorites mFavorites;
     private final boolean mIsFavoritesAdapter;
 
-    public RecyclerViewAdapter(Group soundGroup, RecyclerView recyclerView) {
+    public RecyclerViewAdapter(Group soundGroup, RecyclerView recyclerView,
+                               Favorites favorites) {
         mContext = recyclerView.getContext();
         mSoundGroup = soundGroup;
         mRecyclerView = recyclerView;
+        mFavorites = favorites;
         mIsFavoritesAdapter = mSoundGroup.getName().equals(Favorites.NAME);
     }
 
@@ -61,10 +64,11 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
     }
 
     private void updatePlayPauseView(ViewHolder holder, Sound sound) {
-        if (holder.mPlayPauseView.getState() == MorphButton.MorphState.START && sound.isPlaying())
+        if (holder.mPlayPauseView.getState() == MorphButton.MorphState.START && sound.isPlaying()) {
             holder.mPlayPauseView.setState(MorphButton.MorphState.END, false);
-        else
+        } else {
             holder.mPlayPauseView.setState(MorphButton.MorphState.START, false);
+        }
     }
 
     private void updateSoundNameTextView(ViewHolder holder, Sound sound) {
@@ -86,9 +90,9 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
 
     private void updateFavoriteButton(ViewHolder holder, Sound sound) {
         holder.mFavoringButton.setOnClickListener(new FavoriteButtonListener(sound, mRecyclerView,
-                mIsFavoritesAdapter));
+                mFavorites, mIsFavoritesAdapter));
         holder.mFavoringButton.setContentDescription(sound.getName());
-        if (SoundManager.getFavorites().contains(sound)) {
+        if (mFavorites.contains(sound)) {
             holder.mFavoringButton.setImageDrawable(ResourcesCompat.getDrawable(mContext,
                     R.drawable.ic_star));
         } else {

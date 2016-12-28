@@ -20,6 +20,7 @@ public class SoundActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CODE = 1;
     private ViewPager mViewPager;
     private ViewPagerAdapter mViewPagerAdapter;
+    private SoundManager mSoundManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,19 +42,22 @@ public class SoundActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_refresh)
+        if (item.getItemId() == R.id.action_refresh) {
             refreshTabs();
+        }
         return true;
     }
 
     private void refreshTabs() {
         // Remove all tabs
         mViewPager.setCurrentItem(0, false);
-        for (int i = mViewPagerAdapter.getCount() - 1; i > 0; i--)
+        for (int i = mViewPagerAdapter.getCount() - 1; i > 0; i--) {
             mViewPagerAdapter.removeFragment(i);
+        }
+
         mViewPager.invalidate();
         // Add and sound groups to the view pager adapter
-        SoundManager.setupFavoritesAndGroups(this);
+        mSoundManager = new SoundManager(this);
         addSoundGroupTabs();
         mViewPagerAdapter.notifyDataSetChanged();
     }
@@ -114,7 +118,7 @@ public class SoundActivity extends AppCompatActivity {
 
     private void setupTabs() {
         // Scan for folders containing sounds
-        SoundManager.setupFavoritesAndGroups(this);
+        mSoundManager = new SoundManager(this);
 
         // Add favorites and sound groups to the view pager adapter
         addTab(Favorites.NAME);
@@ -130,13 +134,13 @@ public class SoundActivity extends AppCompatActivity {
     }
 
     private void addSoundGroupTabs() {
-        if (SoundManager.getGroups().isEmpty()) {
+        if (mSoundManager.getGroups().isEmpty()) {
             showNoSoundsFoundDialog();
-            return;
+        } else {
+            // Create a new tab for each group
+            for (SoundGroup soundGroup : mSoundManager.getGroups())
+                addTab(soundGroup.getName());
         }
-        // Create a new tab for each group
-        for (SoundGroup soundGroup : SoundManager.getGroups())
-            addTab(soundGroup.getName());
     }
 
     private void showNoSoundsFoundDialog() {
@@ -164,6 +168,10 @@ public class SoundActivity extends AppCompatActivity {
         mViewPagerAdapter.addFrag(fragment, groupName);
     }
 
+    public SoundManager getSoundManager() {
+        return mSoundManager;
+    }
+
     private class OnTabSelectedListener implements TabLayout.OnTabSelectedListener {
         @Override
         public void onTabSelected(TabLayout.Tab tab) {
@@ -172,16 +180,18 @@ public class SoundActivity extends AppCompatActivity {
 
             // Update the favorites tab every time it gets selected
             if (Favorites.NAME.equals(tab.getText())) {
-                RecyclerViewFragment fragment = (RecyclerViewFragment) mViewPagerAdapter.getFragment(Favorites.NAME);
+                RecyclerViewFragment fragment = (RecyclerViewFragment) mViewPagerAdapter
+                        .getFragment(Favorites.NAME);
                 fragment.getAdapter().notifyDataSetChanged();
             }
         }
 
         @Override
         public void onTabUnselected(TabLayout.Tab tab) {
-            // Stop mediaplayer when an sound is playing and tabs are switched
-            if (SoundPlayer.getMediaPlayer() != null)
+            // Stop media player when an sound is playing and tabs are switched
+            if (SoundPlayer.getMediaPlayer() != null) {
                 SoundPlayer.reset();
+            }
         }
 
         @Override

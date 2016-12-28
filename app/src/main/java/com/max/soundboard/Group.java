@@ -1,7 +1,5 @@
 package com.max.soundboard;
 
-import android.content.Context;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -9,11 +7,9 @@ import java.util.Iterator;
 abstract class Group implements Iterable<Sound> {
     protected final ArrayList<Sound> mSounds = new ArrayList<>();
     protected final String mName;
-    protected final Context mContext;
 
-    protected Group(String name, Context context) {
+    protected Group(String name) {
         mName = name;
-        mContext = context;
     }
 
     public String getName() {

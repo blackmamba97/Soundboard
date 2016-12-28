@@ -11,35 +11,51 @@ import com.wnafee.vector.compat.ResourcesCompat;
 class FavoriteButtonListener implements View.OnClickListener {
     private final Sound mSound;
     private final RecyclerView mRecyclerView;
+    private final Favorites mFavorites;
     private final boolean mIsFavoritesTab;
 
-    public FavoriteButtonListener(Sound sound, RecyclerView recyclerView, boolean isFavoritesTab) {
+    public FavoriteButtonListener(Sound sound, RecyclerView recyclerView, Favorites favorites,
+                                  boolean isFavoritesTab) {
         mSound = sound;
         mRecyclerView = recyclerView;
+        mFavorites = favorites;
         mIsFavoritesTab = isFavoritesTab;
     }
 
     @Override
     public void onClick(View v) {
         final ImageButton imageButton = (ImageButton) v;
-        final Favorites favorites = SoundManager.getFavorites();
         final String message;
 
         // Decide if we must add or remove the sound name from the favorites
-        if (favorites.contains(mSound)) {
+        if (mFavorites.contains(mSound)) {
             // Remove sound from the favorites
             imageButton.setImageDrawable(ResourcesCompat.getDrawable(v.getContext(),
                     R.drawable.ic_star_outline));
-            favorites.remove(mSound, mIsFavoritesTab);
+            mFavorites.remove(mSound);
             message = String.format(v.getContext().getString(R.string.sound_removed), mSound.getName());
+            if (mIsFavoritesTab) {
+                removeFromOriginTab();
+            }
         } else {
             // Add sound to favorites
             imageButton.setImageDrawable(ResourcesCompat.getDrawable(v.getContext(),
                     R.drawable.ic_star));
-            favorites.add(mSound);
+            mFavorites.add(mSound);
             message = String.format(v.getContext().getString(R.string.sound_added), mSound.getName());
         }
         // Notify the user that the action has finished
         Snackbar.make(mRecyclerView, message, Snackbar.LENGTH_LONG).show();
+    }
+
+    private void removeFromOriginTab() {
+        String groupName = mSound.getGroup().getName();
+        ViewPagerAdapter viewPagerAdapter
+                = ((SoundActivity) mRecyclerView.getContext()).getViewPagerAdapter();
+        RecyclerViewAdapter origAdapter
+                = ((RecyclerViewFragment) viewPagerAdapter.getFragment(groupName)).getAdapter();
+        if (origAdapter != null) {
+            origAdapter.updateItem(mSound);
+        }
     }
 }

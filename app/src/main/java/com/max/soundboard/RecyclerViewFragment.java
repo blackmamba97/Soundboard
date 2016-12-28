@@ -16,29 +16,21 @@ public class RecyclerViewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.recycler_view_fragment, container, false);
-        setupRecyclerView((RecyclerView) view);
-        return view;
-    }
+        RecyclerView recyclerView = (RecyclerView) inflater.inflate(R.layout.recycler_view_fragment,
+                container, false);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 1));
 
-    private void setupRecyclerView(RecyclerView view) {
-        view.setHasFixedSize(true);
-        view.setLayoutManager(new GridLayoutManager(getActivity(), 1));
-        // Create a adapter which holds the group
-        mRecyclerViewAdapter = new RecyclerViewAdapter(getGroup(), view);
-        view.setAdapter(mRecyclerViewAdapter);
-    }
-
-    private Group getGroup() {
-        // Get the group name from the arguments of this fragment
+        // Get the group name from the arguments of this fragment.
+        SoundManager soundManager = ((SoundActivity) getActivity()).getSoundManager();
+        Favorites favorites = soundManager.getFavorites();
         String groupName = getArguments().getString(GROUP_NAME);
+        Group group = soundManager.getSoundGroupByName(groupName);
 
-        // Get the group from the SoundManager
-        if (groupName != null && groupName.equals(Favorites.NAME)) {
-            return SoundManager.getFavorites();
-        } else {
-            return SoundManager.getSoundGroupByName(groupName);
-        }
+        mRecyclerViewAdapter = new RecyclerViewAdapter(group, recyclerView, favorites);
+        recyclerView.setAdapter(mRecyclerViewAdapter);
+        favorites.setFavoritesAdapter(mRecyclerViewAdapter);
+        return recyclerView;
     }
 
     public RecyclerViewAdapter getAdapter() {

@@ -1,13 +1,11 @@
 package com.max.soundboard;
 
-import android.content.Context;
-
 import java.io.File;
 
 
 class SoundGroup extends Group {
-    public SoundGroup(String groupName, Context context) {
-        super(groupName, context);
+    public SoundGroup(String groupName) {
+        super(groupName);
         String directory = SoundManager.SOUND_DIRECTORY + "/" + groupName;
         for (String soundName : FileManager.getSoundFileNames(directory)) {
             File soundDir = new File(directory + "/" + soundName);
