@@ -169,6 +169,12 @@ public class SoundActivity extends AppCompatActivity {
         public void onTabSelected(TabLayout.Tab tab) {
             // Set the current item in the ViewPager
             mViewPager.setCurrentItem(tab.getPosition());
+
+            // Update the favorites tab every time it gets selected
+            if (Favorites.NAME.equals(tab.getText())) {
+                RecyclerViewFragment fragment = (RecyclerViewFragment) mViewPagerAdapter.getFragment(Favorites.NAME);
+                fragment.getAdapter().notifyDataSetChanged();
+            }
         }
 
         @Override
