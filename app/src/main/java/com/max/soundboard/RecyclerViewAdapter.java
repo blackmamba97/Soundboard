@@ -35,14 +35,14 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
         LayoutInflater layoutInflater = LayoutInflater.from(mContext);
         View view = layoutInflater.inflate(R.layout.card_view_item, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
-        setupPlayPauseView(viewHolder);
+        setupPlayPauseView(viewHolder.mPlayPauseView);
         return viewHolder;
     }
 
-    private void setupPlayPauseView(ViewHolder viewHolder) {
-        viewHolder.mPlayPauseView.setStartDrawable(AnimatedVectorDrawable.getDrawable(mContext,
+    private void setupPlayPauseView(MorphButton mb) {
+        mb.setStartDrawable(AnimatedVectorDrawable.getDrawable(mContext,
                 R.drawable.ic_play_to_pause));
-        viewHolder.mPlayPauseView.setEndDrawable(AnimatedVectorDrawable.getDrawable(mContext,
+        mb.setEndDrawable(AnimatedVectorDrawable.getDrawable(mContext,
                 R.drawable.ic_pause_to_play));
     }
 
@@ -50,54 +50,48 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
     public void onBindViewHolder(ViewHolder holder, int position) {
         final Sound sound = mSoundGroup.getSound(position);
 
-        // PlayPauseView must match the current state of the sound
-        updatePlayPauseView(holder, sound);
-
-        // Sound name and group name text view
-        updateSoundNameTextView(holder, sound);
-
-        // Favoring button
-        updateFavoriteButton(holder, sound);
+        // Views must match the current state of the sound
+        updatePlayPauseView(holder.mPlayPauseView, sound.isPlaying());
+        updateTextViews(holder.mSoundNameTextView, holder.mGroupNameTextView, sound);
+        updateFavoriteButton(holder.mFavoringButton, sound);
 
         // The card view recognizes clicks to play the sound
         holder.mCardView.setOnClickListener(new PlayButtonListener(sound));
     }
 
-    private void updatePlayPauseView(ViewHolder holder, Sound sound) {
-        if (holder.mPlayPauseView.getState() == MorphButton.MorphState.START && sound.isPlaying()) {
-            holder.mPlayPauseView.setState(MorphButton.MorphState.END, false);
+    private void updatePlayPauseView(MorphButton mb, boolean isPlaying) {
+        if (mb.getState() == MorphButton.MorphState.START && isPlaying) {
+            mb.setState(MorphButton.MorphState.END, false);
         } else {
-            holder.mPlayPauseView.setState(MorphButton.MorphState.START, false);
+            mb.setState(MorphButton.MorphState.START, false);
         }
     }
 
-    private void updateSoundNameTextView(ViewHolder holder, Sound sound) {
+    private void updateTextViews(TextView soundText, TextView groupText, Sound sound) {
         final String soundName = sound.getName().substring(0, sound.getName().length() - 4);
-        holder.mSoundNameTextView.setText(soundName);
+        soundText.setText(soundName);
         if (mIsFavoritesAdapter) {
             // Get the group name of the sounds in the favorites
-            holder.mGroupNameTextView.setText(sound.getGroup().getName());
+            groupText.setText(sound.getGroup().getName());
 
             // Add bottom padding so the group name has its own space
             final float scale = mContext.getResources().getDisplayMetrics().density;
-            holder.mSoundNameTextView.setPadding(0, 0, 0, (int) (20 * scale + 0.5f));
+            soundText.setPadding(0, 0, 0, (int) (20 * scale + 0.5f));
         } else {
             // Remove bottom padding if group name is not present
-            holder.mGroupNameTextView.setVisibility(View.GONE);
-            holder.mSoundNameTextView.setPadding(0, 0, 0, 0);
+            groupText.setVisibility(View.GONE);
+            soundText.setPadding(0, 0, 0, 0);
         }
     }
 
-    private void updateFavoriteButton(ViewHolder holder, Sound sound) {
-        holder.mFavoringButton.setOnClickListener(new FavoriteButtonListener(sound, mRecyclerView,
-                mFavorites, mIsFavoritesAdapter));
-        holder.mFavoringButton.setContentDescription(sound.getName());
+    private void updateFavoriteButton(ImageButton ib, Sound sound) {
+        ib.setOnClickListener(new FavoriteButtonListener(sound, mRecyclerView, mFavorites,
+                mIsFavoritesAdapter));
+        ib.setContentDescription(sound.getName());
         if (mFavorites.contains(sound)) {
-            holder.mFavoringButton.setImageDrawable(ResourcesCompat.getDrawable(mContext,
-                    R.drawable.ic_star));
+            ib.setImageDrawable(ResourcesCompat.getDrawable(mContext, R.drawable.ic_star));
         } else {
-            holder.mFavoringButton.setImageDrawable(ResourcesCompat.getDrawable(mContext,
-                    R.drawable.ic_star_outline));
+            ib.setImageDrawable(ResourcesCompat.getDrawable(mContext, R.drawable.ic_star_outline));
         }
     }
 

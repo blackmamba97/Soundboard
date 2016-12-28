@@ -35,7 +35,7 @@ class FavoriteButtonListener implements View.OnClickListener {
             mFavorites.remove(mSound);
             message = String.format(v.getContext().getString(R.string.sound_removed), mSound.getName());
             if (mIsFavoritesTab) {
-                removeFromOriginTab();
+                updateItemInOriginTab();
             }
         } else {
             // Add sound to favorites
@@ -48,7 +48,7 @@ class FavoriteButtonListener implements View.OnClickListener {
         Snackbar.make(mRecyclerView, message, Snackbar.LENGTH_LONG).show();
     }
 
-    private void removeFromOriginTab() {
+    private void updateItemInOriginTab() {
         String groupName = mSound.getGroup().getName();
         ViewPagerAdapter viewPagerAdapter
                 = ((SoundActivity) mRecyclerView.getContext()).getViewPagerAdapter();
