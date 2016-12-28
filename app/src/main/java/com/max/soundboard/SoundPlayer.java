@@ -23,15 +23,15 @@ class SoundPlayer {
         // Check if sound exists
         if (!sound.getDirectory().exists())
             return;
-        // Reset the soundplayer
+        // Reset the sound player
         reset();
-        // Remeber the sound to reset it if another sound is played
+        // Remember the sound to reset it if another sound is played
         mLastPlayedSound = sound;
         mLastPlayedSound.setPlaying(true);
         // The old play pause view has been reset and the new one gets active now
         mMorphButton = playPauseView;
         mMorphButton.setState(MorphButton.MorphState.END, true);
-        // Start the mediaplayer
+        // Start the media player
         mMediaPlayer = MediaPlayer.create(context, Uri.fromFile(sound.getDirectory()));
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mMediaPlayer.setOnCompletionListener(
