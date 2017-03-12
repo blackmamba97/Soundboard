@@ -2,27 +2,26 @@ package com.max.soundboard;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 
 class FileManager {
-    private FileManager() {}
+    private FileManager() {
+    }
 
-    public static ArrayList<String> getSubdirectories(String path) {
-        ArrayList<String> subdirectories = new ArrayList<>();
-        File[] files = new File(path).listFiles();
+    public static List<String> getSubdirectories(String path) {
+        List<String> subdirectories = new ArrayList<>();
 
-        if (files != null) {
-            for (File file : files) {
-                if (file.isDirectory()) {
-                    subdirectories.add(file.getName());
-                }
+        for (File file : new File(path).listFiles()) {
+            if (file.isDirectory()) {
+                subdirectories.add(file.getName());
             }
         }
         return subdirectories;
     }
 
-    public static ArrayList<String> getSoundFileNames(String path) {
-        ArrayList<String> soundFiles = new ArrayList<>();
+    public static List<String> getSoundFileNames(String path) {
+        List<String> soundFiles = new ArrayList<>();
 
         for (File file : new File(path).listFiles()) {
             if (file.isFile() && isSoundFileName(file.getName())) {
