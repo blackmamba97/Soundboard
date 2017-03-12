@@ -11,9 +11,11 @@ import java.util.List;
 class ViewPagerAdapter extends FragmentPagerAdapter {
     private final List<Fragment> mFragmentList = new ArrayList<>();
     private final List<String> mFragmentTitleList = new ArrayList<>();
+    private final FragmentManager mFragmentManager;
 
-    public ViewPagerAdapter(FragmentManager manager) {
-        super(manager);
+    public ViewPagerAdapter(FragmentManager fragmentManager) {
+        super(fragmentManager);
+        mFragmentManager = fragmentManager;
     }
 
     @Override
@@ -41,6 +43,11 @@ class ViewPagerAdapter extends FragmentPagerAdapter {
     }
 
     public void removeFragment(int position) {
+        // Fragment must be removed from the manager to get the correct order of fragments while
+        // switching tabs.
+        List<Fragment> fragments = mFragmentManager.getFragments();
+        fragments.remove(mFragmentList.get(position));
+
         mFragmentList.remove(position);
         mFragmentTitleList.remove(position);
     }

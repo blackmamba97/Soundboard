@@ -6,13 +6,13 @@ import java.io.File;
 class Sound {
     private final String name;
     private final File directory;
-    private final SoundGroup group;
+    private final String groupName;
     private boolean isPlaying = false;
 
-    public Sound(String name, File directory, SoundGroup group) {
+    public Sound(String name, File directory, String groupName) {
         this.name = name;
         this.directory = directory;
-        this.group = group;
+        this.groupName = groupName;
     }
 
     public String getName() {
@@ -23,8 +23,8 @@ class Sound {
         return directory;
     }
 
-    public SoundGroup getGroup() {
-        return group;
+    public String getGroupName() {
+        return groupName;
     }
 
     public boolean isPlaying() {
@@ -36,7 +36,18 @@ class Sound {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Sound && name.equals(((Sound) obj).name)
+                && groupName.equals(((Sound) obj).groupName);
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * name.hashCode() + groupName.hashCode();
+    }
+
+    @Override
     public String toString() {
-        return name;
+        return groupName + File.separator + name;
     }
 }
