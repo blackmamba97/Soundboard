@@ -28,12 +28,7 @@ class SoundPlayer {
         // Start the media player.
         mMediaPlayer = MediaPlayer.create(context, Uri.fromFile(sound.getDirectory()));
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                reset(context);
-            }
-        });
+        mMediaPlayer.setOnCompletionListener(mp -> reset(context));
         mMediaPlayer.start();
     }
 

@@ -156,11 +156,11 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewH
 
         public ViewHolder(View v) {
             super(v);
-            mPlayPauseView = (MorphButton) v.findViewById(R.id.play_pause_view);
-            mSoundNameTextView = (TextView) v.findViewById(R.id.sound_name_text_view);
-            mGroupNameTextView = (TextView) v.findViewById(R.id.group_name_text_view);
-            mFavoringButton = (ImageButton) v.findViewById(R.id.favoring_button);
-            mCardView = (CardView) v.findViewById(R.id.card_view);
+            mPlayPauseView = v.findViewById(R.id.play_pause_view);
+            mSoundNameTextView = v.findViewById(R.id.sound_name_text_view);
+            mGroupNameTextView = v.findViewById(R.id.group_name_text_view);
+            mFavoringButton = v.findViewById(R.id.favoring_button);
+            mCardView = v.findViewById(R.id.card_view);
         }
     }
 }
