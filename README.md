@@ -21,5 +21,5 @@ And this sound is in another:
 ```
 
 ## Libraries:
-* [AndroidX](https://developer.android.com/jetpack/androidx/l)
+* [AndroidX](https://developer.android.com/jetpack/androidx/)
 * [vector-compat](https://github.com/wnafee/vector-compat)
