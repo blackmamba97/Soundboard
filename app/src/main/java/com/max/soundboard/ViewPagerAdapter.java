@@ -1,8 +1,9 @@
 package com.max.soundboard;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,11 +15,11 @@ class ViewPagerAdapter extends FragmentPagerAdapter {
     private final FragmentManager mFragmentManager;
 
     public ViewPagerAdapter(FragmentManager fragmentManager) {
-        super(fragmentManager);
+        super(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         mFragmentManager = fragmentManager;
     }
 
-    @Override
+    @Override @NonNull
     public Fragment getItem(int position) {
         return mFragmentList.get(position);
     }

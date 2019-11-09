@@ -46,14 +46,11 @@ if (propFile.canRead()) {
 } else {
     android.buildTypes.release.signingConfig = null
 }
-ext {
-    androidSupportVersion = '27.1.1'
-}
 dependencies {
-    implementation "com.android.support:appcompat-v7:$androidSupportVersion"
-    implementation "com.android.support:cardview-v7:$androidSupportVersion"
-    implementation "com.android.support:design:$androidSupportVersion"
-    implementation "com.android.support:recyclerview-v7:$androidSupportVersion"
-    implementation "com.android.support:support-v4:$androidSupportVersion"
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation "com.wnafee:vector-compat:1.0.5"
 }

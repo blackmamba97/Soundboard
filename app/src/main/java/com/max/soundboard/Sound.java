@@ -1,5 +1,7 @@
 package com.max.soundboard;
 
+import androidx.annotation.NonNull;
+
 import java.io.File;
 
 
@@ -46,7 +48,7 @@ class Sound {
         return 31 * name.hashCode() + groupName.hashCode();
     }
 
-    @Override
+    @Override @NonNull
     public String toString() {
         return groupName + File.separator + name;
     }

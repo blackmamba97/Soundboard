@@ -1,6 +1,6 @@
 # Soundboard
 ## Usage:
-This app scans the internal storage of your smartphone for sound files (.mp3 or .wav).
+This app scans the internal storage of your Android device for sound files (.mp3 or .wav).
 
 The sound files must be structured by folders representing groups of sound.
 
@@ -21,5 +21,5 @@ And this sound is in another:
 ```
 
 ## Libraries:
-* [Android Support Library](http://developer.android.com/tools/support-library/index.html)
+* [AndroidX](https://developer.android.com/jetpack/androidx/l)
 * [vector-compat](https://github.com/wnafee/vector-compat)
